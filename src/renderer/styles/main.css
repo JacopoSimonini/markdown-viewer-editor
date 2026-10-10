@@ -1,0 +1,389 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--preview-font);
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  display: grid;
+  grid-template-rows: var(--toolbar-height) 1fr var(--statusbar-height);
+  height: 100vh;
+}
+
+/* ---------- Toolbar (glassmorphism) ---------- */
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 14px;
+  background: var(--bg-glass);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+}
+
+#settings-group {
+  background: transparent;
+  gap: 8px;
+}
+
+.tb-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-family: var(--preview-font);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.tb-btn.mono {
+  font-family: var(--editor-font);
+  font-size: 12px;
+}
+
+.tb-btn:hover {
+  background: var(--bg-elevated);
+}
+
+.tb-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.field select {
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--preview-font);
+  cursor: pointer;
+}
+
+/* ---------- Panes ---------- */
+#panes {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#divider {
+  position: relative;
+  background: var(--border);
+  overflow: visible;
+}
+
+/* Overleaf-style scroll-sync pill straddling the top of the divider (split mode only). */
+.sync-pill {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  z-index: 15;
+}
+
+.sync-pill button {
+  width: 34px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.sync-pill button:first-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.sync-pill button:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.pane {
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bg-editor);
+  /* Establish a size container so text can scale with the pane's width (cqi units). */
+  container-type: inline-size;
+}
+
+#preview-pane {
+  background: var(--bg-preview);
+  overflow-y: auto;
+}
+
+/* ---------- Layout modes ---------- */
+#app[data-mode='focus'] #panes {
+  grid-template-columns: 1fr;
+}
+#app[data-mode='focus'] #divider,
+#app[data-mode='focus'] #preview-pane {
+  display: none;
+}
+
+#app[data-mode='preview'] #panes {
+  grid-template-columns: 1fr;
+}
+#app[data-mode='preview'] #divider,
+#app[data-mode='preview'] #editor-pane {
+  display: none;
+}
+
+/* ---------- Status bar ---------- */
+#statusbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+}
+
+.status-spacer {
+  flex: 1;
+}
+
+.status-divider {
+  opacity: 0.4;
+}
+
+#status-zoom {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  cursor: pointer;
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+
+#status-zoom:hover {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+/* Shown only when the preview is paused on a large file (see LIVE_PREVIEW_LIMIT). */
+#status-refresh {
+  border: none;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 9px;
+  border-radius: 5px;
+}
+
+#status-refresh:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+#status-refresh[hidden] {
+  display: none;
+}
+
+/* ---------- Loading overlay (shown while a large file parses/renders) ---------- */
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+#loading-overlay[hidden] {
+  display: none;
+}
+
+.loading-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 28px 36px;
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow);
+}
+
+.loading-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--accent-soft);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: loading-spin 0.7s linear infinite;
+}
+
+#loading-label {
+  font-size: 13px;
+  color: var(--text);
+  font-family: var(--preview-font);
+}
+
+/* Success state (e.g. after a PDF export): drop the spinner, keep just the message. */
+.loading-card.success .loading-spinner {
+  display: none;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Export-to-PDF button (icon centred). */
+#export-pdf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- PDF export ----------
+   These rules are applied to the LIVE DOM (via the `exporting` class on <html>, toggled in
+   JS around the printToPDF call) rather than through `@media print`. Electron's printToPDF
+   does emulate print media, but a media query adds no specificity — so equal-specificity
+   @media print rules lose the cascade to editor.css (imported after main.css), leaving the
+   dark page background and the centered 820px column in the PDF. A real class with
+   `html.exporting …` selectors (+ !important on the load-bearing props) reliably wins. */
+html.exporting {
+  /* Force a clean light palette regardless of the on-screen theme. */
+  --bg-preview: #ffffff;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.14);
+  --text: #1f2328;
+  --text-muted: #59636e;
+  --accent: #4c6ef5;
+  --accent-soft: rgba(76, 110, 245, 0.12);
+  --code-bg: #f0f1f4;
+  /* Set on <html> itself so the page canvas (incl. margins) is white, not the dark bg. */
+  background: #fff !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+html.exporting body {
+  background: #fff !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Everything except the preview is hidden in the PDF. */
+html.exporting #toolbar,
+html.exporting #statusbar,
+html.exporting #divider,
+html.exporting #editor-pane {
+  display: none !important;
+}
+
+html.exporting #app {
+  display: block !important;
+  height: auto !important;
+}
+
+html.exporting #panes {
+  display: block !important;
+  overflow: visible !important;
+}
+
+/* Show the preview full-width even if the app is currently in Focus/Editor mode. */
+html.exporting #preview-pane {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  overflow: visible !important;
+  background: #fff !important;
+}
+
+html.exporting .markdown-body {
+  max-width: none !important;
+  padding: 0 !important;
+  color: #1f2328;
+}
+
+/* Keep atomic blocks from splitting awkwardly across pages. */
+html.exporting .markdown-body pre,
+html.exporting .markdown-body blockquote,
+html.exporting .markdown-body table,
+html.exporting .markdown-body img {
+  break-inside: avoid;
+}
+
+html.exporting .markdown-body h1,
+html.exporting .markdown-body h2,
+html.exporting .markdown-body h3 {
+  break-after: avoid;
+}
+
+/* Keep the "Exporting…" overlay visible on screen during export, but out of the PDF. */
+@media print {
+  #loading-overlay {
+    display: none !important;
+  }
+}

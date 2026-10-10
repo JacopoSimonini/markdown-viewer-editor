@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;"
+    />
+    <title>Markdown Editor</title>
+  </head>
+  <body>
+    <div id="app" data-mode="split">
+      <header id="toolbar">
+        <div class="toolbar-group" id="format-group">
+          <button class="tb-btn" data-cmd="bold" title="Bold (Ctrl+B)"><strong>B</strong></button>
+          <button class="tb-btn" data-cmd="italic" title="Italic (Ctrl+I)"><em>I</em></button>
+          <button class="tb-btn" data-cmd="heading" title="Heading (Ctrl+H)">H</button>
+          <button class="tb-btn" data-cmd="list" title="Bullet List">&#8801;</button>
+          <button class="tb-btn" data-cmd="link" title="Link (Ctrl+K)">&#128279;</button>
+          <button class="tb-btn mono" data-cmd="code" title="Inline Code">&lt;/&gt;</button>
+        </div>
+
+        <div class="toolbar-spacer"></div>
+
+        <button class="tb-btn" id="export-pdf" title="Export preview to PDF (saved version)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v12" />
+            <path d="m7 10 5 5 5-5" />
+            <path d="M5 21h14" />
+          </svg>
+        </button>
+
+        <div class="toolbar-group" id="layout-group">
+          <button class="tb-btn" data-mode="split" title="Split View (Ctrl+1)">Split</button>
+          <button class="tb-btn" data-mode="focus" title="Editor Only (Ctrl+2)">Editor</button>
+          <button class="tb-btn" data-mode="preview" title="Preview Only (Ctrl+3)">Preview</button>
+        </div>
+
+        <div class="toolbar-group" id="settings-group">
+          <label class="field">
+            <span>Aa</span>
+            <select id="editor-font" title="Editor font"></select>
+          </label>
+          <label class="field">
+            <span>&#182;</span>
+            <select id="preview-font" title="Preview font"></select>
+          </label>
+          <button class="tb-btn" id="theme-toggle" title="Toggle Theme (Ctrl+Shift+T)">&#9790;</button>
+        </div>
+      </header>
+
+      <main id="panes">
+        <section id="editor-pane" class="pane">
+          <div id="editor"></div>
+        </section>
+        <div id="divider">
+          <div class="sync-pill">
+            <button id="sync-to-preview" title="Scroll preview to match the editor's top line">&#8594;</button>
+            <button id="sync-to-editor" title="Scroll editor to match the preview's top">&#8592;</button>
+          </div>
+        </div>
+        <section id="preview-pane" class="pane">
+          <article id="preview" class="markdown-body"></article>
+        </section>
+      </main>
+
+      <div id="loading-overlay" hidden>
+        <div class="loading-card">
+          <div class="loading-spinner"></div>
+          <div id="loading-label">Opening…</div>
+        </div>
+      </div>
+
+      <footer id="statusbar">
+        <span id="status-filename">Untitled</span>
+        <span class="status-spacer"></span>
+        <button id="status-refresh" title="Large file — preview updates on save" hidden>&#8635; Update preview</button>
+        <span id="status-words">0 words</span>
+        <span class="status-divider">·</span>
+        <button id="status-zoom" title="Reset zoom (Ctrl+0)">100%</button>
+      </footer>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

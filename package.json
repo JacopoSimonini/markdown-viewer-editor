@@ -1,0 +1,60 @@
+{
+  "name": "markdown-viewer-editor",
+  "version": "1.0.0",
+  "description": "A modern, distraction-free Markdown editor with live preview.",
+  "main": "out/main/index.js",
+  "author": "Jacopo Simonini",
+  "license": "MIT",
+  "homepage": "https://github.com/jacopo/markdown-viewer-editor",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "package": "electron-vite build && electron-builder --linux AppImage deb"
+  },
+  "dependencies": {
+    "@codemirror/commands": "^6.6.2",
+    "@codemirror/lang-markdown": "^6.3.1",
+    "@codemirror/language": "^6.10.6",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "@codemirror/view": "^6.34.2",
+    "@fontsource/inter": "^5.1.0",
+    "@fontsource/jetbrains-mono": "^5.1.1",
+    "codemirror": "^6.0.1",
+    "dompurify": "^3.2.2",
+    "katex": "^0.17.0",
+    "marked": "^14.1.4",
+    "marked-katex-extension": "^5.1.10"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^2.3.0",
+    "vite": "^5.4.11"
+  },
+  "build": {
+    "appId": "com.jacopo.markdowneditor",
+    "productName": "Markdown Editor",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "out/**/*"
+    ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Office",
+      "maintainer": "Jacopo Simonini",
+      "synopsis": "Distraction-free Markdown editor with live preview",
+      "artifactName": "markdown-editor-${version}.${ext}",
+      "mimeTypes": [
+        "text/markdown",
+        "text/x-markdown"
+      ]
+    }
+  }
+}
